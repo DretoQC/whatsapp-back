@@ -12,7 +12,7 @@ routes.forEach(route => {
   fastify.route(route)
 })
 
-await connectDatabase();
+//await connectDatabase();
 
 // Run the server!
 fastify.listen({ port: process.env.SERVER_PORT }, function (err, address) {
