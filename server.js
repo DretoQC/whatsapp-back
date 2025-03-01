@@ -3,6 +3,7 @@ import { connectDatabase } from './DatabaseConnector.js'
 import * as dotenv from 'dotenv'
 import routes from './src/routes.js'
 dotenv.config();
+import fastifyJwt from "@fastify/jwt";
 
 const fastify = Fastify({
   logger: true
@@ -12,7 +13,19 @@ routes.forEach(route => {
   fastify.route(route)
 })
 
-//await connectDatabase();
+await connectDatabase();
+
+const myCustomMessages = {
+  badRequestErrorMessage: 'Format is Authorization: Bearer token',
+  noAuthorizationInHeaderMessage: 'Autorization header is missing!',
+  authorizationTokenExpiredMessage: 'Authorization token expired',
+}
+fastify.register(fastifyJwt, {
+  secret: process.env.JWT_SECRET_KEY,
+  messages: myCustomMessages
+
+})
+
 
 // Run the server!
 fastify.listen({ port: process.env.SERVER_PORT }, function (err, address) {
